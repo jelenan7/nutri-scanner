@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div style="max-width: 870px; margin: 20px auto 50px auto; padding: 0 10px;">
+
+  <h1 style="color: #42A475; font-size: 36px; margin-bottom: 12px; text-align:center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 620;">
+    About Nutri Scanner
+  </h1>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-bottom: 10px;">
+    Nutri Scanner was created to make everyday food choices simpler, clearer and healthier. 
+    Instead of struggling with tiny labels on food packaging, the app lets you scan a barcode 
+    or search for a food item and instantly view key nutrition information presented in a clean 
+    and easy-to-read format.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-bottom: 10px;">
+    All product data is retrieved through the <strong>Open Food Facts API</strong>, 
+    a global open database of food products. Since ingredients and nutrition values can vary 
+    by country or brand, <strong>anyone with allergies or medical conditions should always verify 
+    the information on the original product packaging</strong>.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444; ">
+    Nutri Scanner is also a helpful tool for people tracking their diet. Whether you are 
+    looking for a chocolate bar that fits your calorie goals or searching for products with 
+    lower sugar, more protein or fewer carbohydrates, the app helps you quickly find options 
+    that match your nutritional needs.
+  </p>
+
+  <hr style="margin-top:10px; border: none; border-top: 1px solid #D9D9D9;">
+</div>
+<div class = "creator-box" style="max-width: 850px; margin: 1px auto 1px auto;">
+  <h2 style="color: #42A475; font-size: 24px; margin-bottom: 10px; margin-top: -10px; 
+             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 620; padding: 10px;">
+    About the Creator
+  </h2>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444;">
+    Nutri Scanner was created by 
+  <strong>Jelena Nikčević</strong> -> a BI Engineer by profession and an Electrical Engineering graduate, 
+  currently pursuing a Master’s degree in Artificial Intelligence at the University of Donja Gorica.
+  A mix of tech curiosity, a love for clean design and the eternal struggle of reading 
+  microscopic labels on food packaging inspired this project.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-top: 10px;">
+    For feedback, suggestions or contact:<br>
+    <strong>Email:</strong> <a href="mailto:nikcevicj7@gmail.com" style="color:#42A475;">
+      nikcevicj7@gmail.com
+    </a>
+  </p>
+</div>
+</div>
+<style>
+  body {
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='logo2.png') }}"); /* tvoj logo */
+    background-size: 900px auto;   /* veličina “pločice” sa logom */
+    background-repeat:no-repeat;     /* šara po cijeloj stranici */
+    background-position: center -10px;
+    opacity: 0.03;                 /* veoma blago, da ne smeta tekstu */
+    z-index: -1;                   
+    pointer-events: none;
+  }
+</style>
+
+
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Barcode Scan{% endblock %}
+
+{% block content %}
+
+<!-- BARCODE FORM -->
+ {% if not product %}
+<h1 class="hero-title" style=" margin-bottom: 30px; margin-top: -50px;">
+    Enter or scan a barcode
+</h1>
+{% endif %}
+
+<form id="barcode-form" method="POST" style="margin-bottom: 25px;">
+  <label for="barcode"
+         style="font-weight: bold; color: #42A475; font-size: 16pt; display: block; margin-bottom: 4px;">
+    Enter barcode:
+  </label>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <input
+      type="text"
+      name="barcode"
+      id="barcode"
+      placeholder="e.g. 8600939506936"
+      required
+      style="padding: 9px 9px; width: 200px; background-color: white; color: #444;
+             border: 1px solid #42A475; border-radius: 10px; font-size: 16px;"
+    >
+    <button
+      type="submit"
+      class="btn-search"
+      style="padding: 6px 8px; height: 35px; width: 80px; background-color: #42A475;
+             color: white; border: 1px solid #42A475; border-radius: 12px; cursor: pointer;
+             font-weight: 600; font-size: 14px;"
+    >
+      Search
+    </button>
+  </div>
+</form>
+
+
+<!-- PAGE WRAPPER -->
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 40px;">
+
+  <!-- LEFT BOX: PRODUCT INFO -->
+  <div style="box-shadow: 0 8px 21px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 20px;
+              background-color: #f9f9f9; width: 492px; max-height: 750px; overflow-y: auto;">
+
+    {% if product %}
+    <div style="display: flex; gap: 25px;">
+      <!-- Product Image -->
+      <div style="flex-shrink: 0;">
+        {% if product.selected_images and product.selected_images.front %}
+        <img
+          src="{{ product.selected_images.front.display.en }}"
+          alt="Product Image"
+          style="width: 200px; height: 200px; object-fit: cover; border: 1px solid #000;"
+        >
+        {% else %}
+        <div
+          style="width: 180px; height: 180px; background-color: #F5F5F5;
+                 display: flex; align-items: center; justify-content: center;
+                 border: 1px solid #000;"
+        >
+          No image
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Nutrition Info -->
+      <div style="line-height: 1.7; font-size: 15px;">
+        <p><strong>Per 100g:</strong></p>
+        <p><strong>Energy:</strong> {{ product.nutriments["energy-kcal_100g"] or "..." }} kcal</p>
+        <p><strong>Fat:</strong> {{ product.nutriments["fat_100g"] or "..." }} g</p>
+        <p><strong>Carbohydrate:</strong> {{ product.nutriments["carbohydrates_100g"] or "..." }} g</p>
+        <p><strong>Fibre:</strong> {{ product.nutriments["fiber_100g"] or "..." }} g</p>
+        <p><strong>Protein:</strong> {{ product.nutriments["proteins_100g"] or "..." }} g</p>
+        <p><strong>Salt:</strong> {{ product.nutriments["salt_100g"] or "..." }} g</p>
+      </div>
+    </div>
+
+    <!-- Other Info -->
+    <div style="margin-top: 20px; font-size: 15px; line-height: 1.7;">
+      {% if product.countries_tags %}
+      <p>
+        <strong>Country:</strong>
+        {{ product.countries_tags | map('replace', 'en:', '') | join(', ') }}
+      </p>
+      {% endif %}
+
+      <p><strong>Nova:</strong> {{ product.nova_group or "..." }}</p>
+      <p><strong>Escore:</strong> {{ product.ecoscore_grade or "..." }}</p>
+
+      <p>
+        <strong>Available in MNE:</strong>
+        {% if 'en:montenegro' in product.countries_tags %} Yes {% else %} No {% endif %}
+      </p>
+
+      <p><strong>Vegan:</strong> {% if "en:vegan" in product.labels_tags %}Yes{% else %}No{% endif %}</p>
+      <p><strong>Gluten Free:</strong> {% if "en:gluten-free" in product.labels_tags %}Yes{% else %}No{% endif %}</p>
+      <p><strong>Lactose Free:</strong> {% if "en:lactose-free" in product.labels_tags %}Yes{% else %}No{% endif %}</p>
+    </div>
+
+    {% elif not_found %}
+      <p style="color: gray; font-weight: bold;">❌ Product not found.</p>
+    {% else %}
+      <p style="color: gray;">Enter a barcode or scan it to see product info.</p>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT BOX: CAMERA -->
+   <div style="display: flex; flex-direction: column; align-items: center; margin-top: -7px; margin-left: -40px;">
+    <!-- GREEN BOX FOR SCANNER -->
+    <div id="reader" class="show-gif">
+      <h2 class="scanner-title">Scan barcode</h2>
+      <div class="scan-controls">
+        <button id="open-camera" class="scan-btn">
+          <img src="{{ url_for('static', filename='camera.gif') }}" alt="Open camera">
+          Open Camera
+        </button>
+
+        <button id="upload-image" class="scan-btn">
+          <img src="{{ url_for('static', filename='photo.gif') }}" alt="Upload image">
+          Upload Image
+        </button>
+
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+      </div>
+    </div>
+
+    <!-- message under scanner -->
+    <div id="scan-message" class="scan-message"></div>
+  </div>
+</div>
+
+<!-- CAMERA SCRIPT -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="/static/js/barcode.js"></script>
+
+<style>
+  body {
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='logo2.png') }}"); /* tvoj logo */
+    background-size: 900px auto;   /* veličina “pločice” sa logom */
+    background-repeat:no-repeat;     /* šara po cijeloj stranici */
+    background-position: center -10px;
+    opacity: 0.025;                 /* veoma blago, da ne smeta tekstu */
+    z-index: -1;                   
+    pointer-events: none;
+  }
+</style>
+
+{% endblock %}

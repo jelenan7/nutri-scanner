@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<div class="hero-wrapper hero-no-image">
+
+
+    <section class="hero-text">
+        <h1 class="hero-title">Discover what you really eat</h1>
+        <p>
+            Scan barcodes or search foods to instantly see sugar, protein, carbs and more.
+        </p>
+        <a href="{{ url_for('barcode_scan') }}" class="btn-primary">Start Scanning</a>
+    </section>
+
+    <!-- <div class="hero-image" style="margin-top: 66px;">
+        <img 
+        id="heroVisual"
+        src="{{ url_for('static', filename='barcode.gif') }}" 
+        alt="Barcode animation"
+        >
+    </div> -->
+
+
+</div> <!-- END hero-wrapper -->
+
+
+<!-- HOW IT WORKS (steps under the hero section) -->
+<section class="steps-flow">
+    <div class="flow-container">
+
+        <!-- Step 1 -->
+        <div class="flow-box">
+            <div class="flow-icon">
+                <img src="{{ url_for('static', filename='scan1.gif') }}" alt="Barcode animation">
+            </div>
+            <h3>Scan barcode</h3>
+        </div>
+
+        <div class="flow-arrow">
+            <img src="{{ url_for('static', filename='arrow1.gif') }}" alt="Barcode animation">
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flow-box">
+            <div class="flow-icon">
+                <img src="{{ url_for('static', filename='bar chart.gif') }}" alt="Barcode animation">
+            </div>
+            <h3>Instant breakdown</h3>
+        </div>
+
+        <div class="flow-arrow">
+            <img src="{{ url_for('static', filename='arrow1.gif') }}" alt="Barcode animation">
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flow-box">
+            <div class="flow-icon">
+                <img src="{{ url_for('static', filename='health.gif') }}" alt="Barcode animation">
+            </div>
+            <h3>Healthier choices</h3>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    const gifSrc = "{{ url_for('static', filename='barcode.gif') }}";
+    const imageSrc = "{{ url_for('static', filename='milk.png') }}";
+
+    const heroImage = document.getElementById("heroVisual");
+
+    let showingGif = true;
+
+    setInterval(() => {
+        if (showingGif) {
+            heroImage.src = imageSrc;
+        } else {
+            // trik da se GIF resetuje i ponovo krene
+            heroImage.src = "";
+            heroImage.src = gifSrc;
+        }
+        showingGif = !showingGif;
+    }, 4500); // svake 3 sekunde
+</script>
+
+
+{% endblock %}

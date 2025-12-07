@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Flask
+instance/
+.env
+*.env
+
+# Compiled / temporary
+*.log
+*.tmp
+
+# Byte-compiled
+*.so
+*.dll
+build/
+dist/

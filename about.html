@@ -1,78 +1,96 @@
 {% extends "base.html" %}
-{% block title %}About{% endblock %}
+{% block title %}About - Nutri Scanner{% endblock %}
 
 {% block content %}
-<div style="max-width: 870px; margin: 20px auto 50px auto; padding: 0 10px;">
+<div style="max-width: 870px; margin: 20px auto 50px auto; padding: 0 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-  <h1 style="color: #42A475; font-size: 36px; margin-bottom: 12px; text-align:center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 620;">
+  <!-- Naslovna sekcija -->
+  <h1 style="color: #42A475; font-size: 38px; margin-bottom: 20px; text-align:center; font-weight: 700;">
     About Nutri Scanner
   </h1>
 
-  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-bottom: 10px;">
-    Nutri Scanner was created to make everyday food choices simpler, clearer and healthier. 
-    Instead of struggling with tiny labels on food packaging, the app lets you scan a barcode 
-    or search for a food item and instantly view key nutrition information presented in a clean 
-    and easy-to-read format.
-  </p>
+  <div style="font-size: 17px; line-height: 1.8; color: #444;">
+    <p style="margin-bottom: 20px;">
+      <strong>Nutri Scanner</strong> was developed to simplify everyday nutritional choices by transforming complex, often unreadable food labels into a 
+      <strong>clear, digital, and user-friendly format</strong>. [1] Whether you are at the grocery store or planning your meals at home, 
+      the app provides instant access to essential nutrition data standardized per 100g of the product. [2]
+    </p>
 
-  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-bottom: 10px;">
-    All product data is retrieved through the <strong>Open Food Facts API</strong>, 
-    a global open database of food products. Since ingredients and nutrition values can vary 
-    by country or brand, <strong>anyone with allergies or medical conditions should always verify 
-    the information on the original product packaging</strong>.
-  </p>
+    <!-- Ključne funkcionalnosti izvučene iz tehničke dokumentacije -->
+    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 5px solid #42A475;">
+      <h3 style="color: #42A475; margin-top: 0;">Key Features:</h3>
+      <ul style="margin-bottom: 0;">
+        <li><strong>Instant Scan:</strong> Identify products quickly using your device's camera or by uploading a barcode image. [2]</li>
+        <li><strong>Smart Search & Filters:</strong> Find products based on specific criteria like high protein, low sugar, or dietary needs such as 
+            <strong>Vegan, Gluten-Free, and Lactose-Free</strong>. [3]</li>
+        <li><strong>Health Indicators:</strong> Visual representation of <strong>Nutri-Score, NOVA, and Eco-Score</strong> to help you understand the 
+            nutritional quality and environmental impact of your food. [4]</li>
+      </ul>
+    </div>
 
-  <p style="font-size: 16px; line-height: 1.7; color: #444; ">
-    Nutri Scanner is also a helpful tool for people tracking their diet. Whether you are 
-    looking for a chocolate bar that fits your calorie goals or searching for products with 
-    lower sugar, more protein or fewer carbohydrates, the app helps you quickly find options 
-    that match your nutritional needs.
-  </p>
+    <p style="margin-bottom: 20px;">
+      All product data is retrieved through the <strong>Open Food Facts API</strong>, a global open database. [1] 
+      Since ingredients and nutrition values can vary by region or brand, 
+      <span style="color: #d9534f; font-weight: 600;">anyone with allergies or specific medical conditions should always verify the information 
+      on the original product packaging.</span> [5]
+    </p>
+  </div>
 
-  <hr style="margin-top:10px; border: none; border-top: 1px solid #D9D9D9;">
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #D9D9D9;">
+
+  <!-- Sekcija o autoru -->
+  <div class="creator-box" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <h2 style="color: #42A475; font-size: 26px; margin-bottom: 15px; font-weight: 650;">
+      About the Creator
+    </h2>
+
+    <p style="font-size: 16px; line-height: 1.7; color: #444;">
+      Nutri Scanner is a project by <strong>Jelena Nikčević</strong>, a <strong>BI Engineer</strong> and Electrical Engineering graduate, 
+      currently pursuing a Master’s degree in <strong>Artificial Intelligence</strong> at the University of Donja Gorica. [5]
+    </p>
+    
+    <p style="font-size: 16px; line-height: 1.7; color: #444; margin-top: 10px;">
+      This application is the result of a passion for clean design and the practical application of modern technologies like 
+      <strong>Python and Flask</strong> to solve the everyday struggle of reading microscopic food labels. [1, 2]
+    </p>
+
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc;">
+      <strong>Get in touch for feedback or suggestions:</strong><br>
+      <span style="display: inline-block; margin-top: 10px;">
+        <strong>Email:</strong> 
+        <a href="mailto:nikcevicj7@gmail.com" style="color:#42A475; text-decoration: none; font-weight: 600;">
+          nikcevicj7@gmail.com
+        </a>
+      </span>
+    </div>
+  </div>
 </div>
-<div class = "creator-box" style="max-width: 850px; margin: 1px auto 1px auto;">
-  <h2 style="color: #42A475; font-size: 24px; margin-bottom: 10px; margin-top: -10px; 
-             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 620; padding: 10px;">
-    About the Creator
-  </h2>
 
-  <p style="font-size: 16px; line-height: 1.7; color: #444;">
-    Nutri Scanner was created by 
-  <strong>Jelena Nikčević</strong> -> a BI Engineer by profession and an Electrical Engineering graduate, 
-  currently pursuing a Master’s degree in Artificial Intelligence at the University of Donja Gorica.
-  A mix of tech curiosity, a love for clean design and the eternal struggle of reading 
-  microscopic labels on food packaging inspired this project.
-  </p>
-
-  <p style="font-size: 16px; line-height: 1.7; color: #444; margin-top: 10px;">
-    For feedback, suggestions or contact:<br>
-    <strong>Email:</strong> <a href="mailto:nikcevicj7@gmail.com" style="color:#42A475;">
-      nikcevicj7@gmail.com
-    </a>
-  </p>
-</div>
-</div>
 <style>
   body {
     position: relative;
     min-height: 100vh;
     margin: 0;
+    background-color: #fff;
   }
 
   body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: url("{{ url_for('static', filename='logo2.png') }}"); /* tvoj logo */
-    background-size: 900px auto;   /* veličina “pločice” sa logom */
-    background-repeat:no-repeat;     /* šara po cijeloj stranici */
-    background-position: center -10px;
-    opacity: 0.03;                 /* veoma blago, da ne smeta tekstu */
-    z-index: -1;                   
+    background-image: url("{{ url_for('static', filename='logo2.png') }}");
+    background-size: 800px auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: 0.04; /* Blago vidljiv logo u pozadini */
+    z-index: -1;
     pointer-events: none;
   }
+
+  /* Responzivnost za manje ekrane */
+  @media (max-width: 600px) {
+    h1 { font-size: 28px !important; }
+    .creator-box { padding: 15px !important; }
+  }
 </style>
-
-
 {% endblock %}

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from off_client import get_product_by_barcode, search_products
+import math
 
 app = Flask(__name__)
 
@@ -40,10 +41,13 @@ def barcode_scan():
 # ===== SMART SEARCH PAGE =====
 @app.route("/smart-search", methods=["GET", "POST"])
 def smart_search():
+    PER_PAGE = 7
+
     products = []
     selected_product = None
+    page = 1
+    total_pages = 1
 
-    # default filter vrijednosti
     filters = {
         "product": "",
         "sugar": None,
@@ -57,26 +61,22 @@ def smart_search():
         "gluten_free": False,
     }
 
-    page = 1
+    def to_float(name):
+        val = request.form.get(name)
+        if not val:
+            return None
+        val = val.replace(",", ".")
+        try:
+            return float(val)
+        except ValueError:
+            return None
 
     if request.method == "POST":
         action = request.form.get("action", "search")
-        page = int(request.form.get("page", "1"))
+        page = int(request.form.get("page", 1))
 
-        # --- pokupi filtere ---
+        # filters
         filters["product"] = request.form.get("product", "").strip()
-
-        def to_float(name):
-            val = request.form.get(name)
-            if not val:
-                return None
-            # dozvoli i 20,0 i 20.0
-            val = val.replace(",", ".")
-            try:
-                return float(val)
-            except ValueError:
-                return None
-
         filters["sugar"] = to_float("sugar")
         filters["fat"] = to_float("fat")
         filters["energy"] = to_float("energy")
@@ -88,95 +88,61 @@ def smart_search():
         filters["lactose_free"] = bool(request.form.get("lactose_free"))
         filters["gluten_free"] = bool(request.form.get("gluten_free"))
 
-        # --- helper za pretragu: vrati max 7 brzo ---
-        def run_search(current_page):
-            query = filters["product"] or "food"
+        query = filters["product"] or "food"
+        raw = search_products(query, page_size=20, page=1)
 
-            try:
-                raw = search_products(query, page_size=25, page=current_page)
-            except Exception as e:
-                print("Greška pri pretrazi proizvoda:", e)
-                return []
+        filtered = []
+        for p in raw:
+            nutr = p.get("nutriments", {}) or {}
 
-            filtered = []
-            for p in raw:
-                nutr = p.get("nutriments", {}) or {}
+            def ok_max(key, max_val):
+                if max_val is None:
+                    return True
+                v = nutr.get(key)
+                if v is None:
+                    return False
+                try:
+                    return float(v) <= max_val
+                except (TypeError, ValueError):
+                    return False
 
-                def ok_max(key, max_val):
-                    """Vrati True ako je vrijednost za key <= max_val ili ako nema limita."""
-                    if max_val is None:
-                        return True
-                    v = nutr.get(key)
-                    if v is None:
-                        # nema podatka – tretiraj kao da ne prolazi filter
-                        return False
-                    try:
-                        v_float = float(v)
-                    except (TypeError, ValueError):
-                        return False
-                    return v_float <= max_val
+            if not ok_max("sugars_100g", filters["sugar"]): continue
+            if not ok_max("fat_100g", filters["fat"]): continue
+            if not ok_max("energy-kcal_100g", filters["energy"]): continue
+            if not ok_max("carbohydrates_100g", filters["carbs"]): continue
+            if not ok_max("proteins_100g", filters["protein"]): continue
 
-                # numerički filteri
-                if not ok_max("sugars_100g", filters["sugar"]):
-                    continue
-                if not ok_max("fat_100g", filters["fat"]):
-                    continue
-                if not ok_max("energy-kcal_100g", filters["energy"]):
-                    continue
-                if not ok_max("carbohydrates_100g", filters["carbs"]):
-                    continue
-                if not ok_max("proteins_100g", filters["protein"]):
-                    continue
+            if filters["available_mne"] and "en:montenegro" not in p.get("countries_tags", []): continue
+            if filters["vegan"] and "en:vegan" not in p.get("labels_tags", []): continue
+            if filters["lactose_free"] and "en:lactose-free" not in p.get("labels_tags", []): continue
+            if filters["gluten_free"] and "en:gluten-free" not in p.get("labels_tags", []): continue
 
-                # checkbox filteri
-                if filters["available_mne"] and "en:montenegro" not in p.get("countries_tags", []):
-                    continue
-                if filters["vegan"] and "en:vegan" not in p.get("labels_tags", []):
-                    continue
-                if filters["lactose_free"] and "en:lactose-free" not in p.get("labels_tags", []):
-                    continue
-                if filters["gluten_free"] and "en:gluten-free" not in p.get("labels_tags", []):
-                    continue
+            filtered.append(p)
 
-                filtered.append(p)
-                if len(filtered) >= 7:   # PRVIH 7 I STOP
-                    break
+        # 🔹 3️⃣ TOTAL PAGES
+        total_pages = max(1, math.ceil(len(filtered) / PER_PAGE))
 
-            return filtered
+        # 🔹 4️⃣ REŽI SAMO TRENUTNU STRANICU
+        start = (page - 1) * PER_PAGE
+        end = start + PER_PAGE
+        products = filtered[start:end]
 
-        # ========== LOGIKA AKCIJA ==========
-
-        # button Search
-        if action == "search":
-            page = 1
-            products = run_search(page)
-
-        # button Refresh (nova “strana” istih filtera)
-        elif action == "refresh":
-            page += 1
-            products = run_search(page)
-
-        # klik na proizvod – action = "details:<barcode>"
-        elif action.startswith("details:"):
+        # details
+        if action.startswith("details:"):
             code = action.split(":", 1)[1]
-            products = run_search(page)  # da lista postoji za BACK
             try:
                 resp = get_product_by_barcode(code)
                 selected_product = resp.get("product")
             except Exception as e:
-                print("Error fetching product details:", e)
+                print(e)
 
-        # dugme Back to list
-        elif action == "back":
-            products = run_search(page)
-
-    # GET – početno stanje, samo forma bez rezultata
     return render_template(
         "smart_search.html",
         active_page="smart",
         products=products,
-        filters=filters,
         page=page,
+        total_pages=total_pages,
+        filters=filters,
         selected_product=selected_product,
     )
 

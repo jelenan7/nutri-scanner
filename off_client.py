@@ -1,5 +1,5 @@
-# off_client.py
 import requests
+from requests.exceptions import ReadTimeout, RequestException
 import os
 
 API_BASE = os.getenv("OFF_API_URL", "https://world.openfoodfacts.org")
@@ -13,10 +13,6 @@ def get_product_by_barcode(barcode: str) -> dict:
 
 
 def search_products(query: str, page_size: int = 25, page: int = 1) -> list:
-    """
-    Brža pretraga proizvoda sa paginacijom.
-    Manji page_size = brži odgovor.
-    """
     params = {
         "search_terms": query,
         "search_simple": 1,
@@ -25,10 +21,20 @@ def search_products(query: str, page_size: int = 25, page: int = 1) -> list:
         "page_size": page_size,
         "page": page,
     }
-    res = requests.get(f"{API_BASE}/cgi/search.pl", params=params, timeout=8)
-    res.raise_for_status()
-    data = res.json()
-    return data.get("products", [])
+
+    try:
+        res = requests.get(
+            f"{API_BASE}/cgi/search.pl",
+            params=params,
+            timeout=5  # čak i smanji timeout
+        )
+        res.raise_for_status()
+        return res.json().get("products", [])
+
+    except (ReadTimeout, RequestException) as e:
+        print("⚠️ OpenFoodFacts timeout:", e)
+        return []   # ⬅️ KRITIČNO: ne pucaj aplikaciju
+
 
 
 

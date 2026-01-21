@@ -1,0 +1,91 @@
+{# templates/pagination.html #}
+
+{% set cp = page|default(1)|int %}
+{% set tp = total_pages|default(1)|int %}
+
+{% if tp > 1 %}
+<div style="
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:56px;
+  border-top:1px solid #e6e6e6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  background:#f9f9f9;
+  border-bottom-left-radius:10px;
+  border-bottom-right-radius:10px;
+">
+
+  <!-- LEFT -->
+  <button
+    type="submit"
+    name="page"
+    value="{{ cp - 1 }}"
+    {% if cp <= 1 %}disabled{% endif %}
+    class="pager-btn {% if cp <= 1 %}disabled{% endif %}"
+    style="
+      background:none;
+      border:none;
+      font-size:22px;
+      color:#42A475;
+      cursor:pointer;
+      opacity: {{ '0.3' if cp <= 1 else '1' }};
+    "
+    title="Previous"
+    >
+    ←
+  </button>
+
+  <!-- PAGE NUMBERS -->
+  <div style="display:flex; gap:10px; font-size:14px;">
+    {% for i in range(1, tp + 1) %}
+      {% if i == cp %}
+        <span style="
+          font-weight:600;
+          color:#42A475;
+          text-decoration:underline;
+        ">
+          {{ i }}
+        </span>
+      {% else %}
+        <button
+          type="submit"
+          name="page"
+          value="{{ i }}"
+          style="
+            background:none;
+            border:none;
+            color:#666;
+            cursor:pointer;
+          ">
+          {{ i }}
+        </button>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- RIGHT -->
+  <button
+    type="submit"
+    name="page"
+    value="{{ cp + 1 }}"
+    {% if cp >= tp %}disabled{% endif %}
+    class="pager-btn {% if cp >= tp %}disabled{% endif %}"
+    style="
+      background:none;
+      border:none;
+      font-size:22px;
+      color:#42A475;
+      cursor:pointer;
+      opacity: {{ '0.3' if cp >= tp else '1' }};"
+    title="Next"
+    >
+    →
+  </button>
+
+</div>
+{% endif %}

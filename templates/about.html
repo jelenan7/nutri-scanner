@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}About - Nutri Scanner{% endblock %}
+
+{% block content %}
+<div style="max-width: 870px; margin: 20px auto 50px auto; padding: 0 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+  <!-- Naslovna sekcija -->
+  <h1 style="color: #42A475; font-size: 38px; margin-bottom: 20px; text-align:center; font-weight: 700;">
+    About Nutri Scanner
+  </h1>
+
+  <div style="font-size: 17px; line-height: 1.8; color: #444;">
+    <p style="margin-bottom: 20px;">
+      <strong>Nutri Scanner</strong> was developed to simplify everyday nutritional choices by transforming complex, often unreadable food labels into a 
+      <strong>clear, digital, and user-friendly format</strong>. Whether you are at the grocery store or planning your meals at home, 
+      the app provides instant access to essential nutrition data standardized per 100g of the product.
+    </p>
+
+    <!-- Ključne funkcionalnosti izvučene iz tehničke dokumentacije -->
+    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 5px solid #42A475;box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);">
+      <h3 style="color: #42A475; margin-top: 0;">Key Features:</h3>
+      <ul style="margin-bottom: 0; margin-left: 7px;">
+        <li><strong>Instant Scan:</strong> Identify products quickly using your device's camera or by uploading a barcode image.</li>
+        <li><strong>Smart Search & Filters:</strong> Find products based on specific criteria like high protein, low sugar, or dietary needs such as 
+            <strong>Vegan, Gluten-Free, and Lactose-Free</strong>.</li>
+        <li><strong>Health Indicators:</strong> Visual representation of <strong>Nutri-Score, NOVA, and Eco-Score</strong> to help you understand the 
+            nutritional quality and environmental impact of your food.</li>
+      </ul>
+    </div>
+
+    <p style="margin-bottom: 20px;">
+      All product data is retrieved through the <strong>Open Food Facts API</strong>, a global open database. 
+      Since ingredients and nutrition values can vary by region or brand, 
+      <span style="color: #d9534f; font-weight: 600;">anyone with allergies or specific medical conditions should always verify the information 
+      on the original product packaging.</span>
+    </p>
+  </div>
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #D9D9D9;">
+
+  <!-- Sekcija o autoru -->
+  <div class="creator-box" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <h2 style="color: #42A475; font-size: 26px; margin-bottom: 15px; font-weight: 650;">
+      About the Creator
+    </h2>
+
+    <p style="font-size: 16px; line-height: 1.7; color: #444;">
+      Nutri Scanner is a project by <strong>Jelena Nikčević</strong>, a <strong>BI Engineer</strong> and Electrical Engineering graduate, 
+      currently pursuing a Master’s degree in <strong>Artificial Intelligence</strong> at the University of Donja Gorica.
+    </p>
+    
+    <p style="font-size: 16px; line-height: 1.7; color: #444; margin-top: 10px;">
+      This application is the result of a passion for clean design and the practical application of modern technologies like 
+      <strong>Python and Flask</strong> to solve the everyday struggle of reading microscopic food labels.
+    </p>
+
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc;">
+      <strong>Get in touch for feedback or suggestions:</strong><br>
+      <span style="display: inline-block; margin-top: 10px;">
+        <strong>Email:</strong> 
+        <a href="mailto:nikcevicj7@gmail.com" style="color:#42A475; text-decoration: none; font-weight: 600;">
+          nikcevicj7@gmail.com
+        </a>
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  body {
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #F5F7F6;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='logo2.png') }}");
+    background-size: 800px auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: 0.04; /* Blago vidljiv logo u pozadini */
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Responzivnost za manje ekrane */
+  @media (max-width: 600px) {
+    h1 { font-size: 28px !important; }
+    .creator-box { padding: 15px !important; }
+  }
+</style>
+{% endblock %}

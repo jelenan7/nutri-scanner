@@ -78,7 +78,7 @@
   {% if selected_product.nutriscore_grade %}
     <img
       src="{{ url_for('static',
-          filename='nutriscore-' + selected_product.nutriscore_grade|lower + '.png') }}"
+          filename='png/nutriscore-' + selected_product.nutriscore_grade|lower + '.png') }}"
       alt="Nutri-Score {{ selected_product.nutriscore_grade|upper }}"
       style="height:45px;">
   {% endif %}
@@ -91,7 +91,7 @@
   {% endif %}
 
   {% if selected_product.ecoscore_grade %}
-    <img src="/static/ecoscore-{{ selected_product.ecoscore_grade|lower }}.png"
+    <img src="/static/png/ selected_product.ecoscore_grade|lower }}.png"
          alt="Eco-Score"
          style="height:40px;">
   {% endif %}

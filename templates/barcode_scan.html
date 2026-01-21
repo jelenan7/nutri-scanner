@@ -54,7 +54,7 @@
     <!-- Nutri-Score -->
     {% if product.nutriscore_grade %}
     <img 
-        src="{{ url_for('static', filename='nutriscore-' 
+        src="{{ url_for('static', filename='png/nutriscore-' 
           + product.nutriscore_grade|lower + '.png') }}"           
           alt="Nutri‑Score {{ product.nutriscore_grade|upper }}" 
           style="height: 45px; width: auto; margin-top: -7px;">
@@ -72,7 +72,7 @@
     <!-- Eco-Score -->
     {% if product.ecoscore_grade %}
     <div>
-      <img src="/static/ecoscore-{{ product.ecoscore_grade | lower }}.png" alt="Eco-Score"
+      <img src="/static/png/ product.ecoscore_grade | lower }}.png" alt="Eco-Score"
            style="height: 40px;">
     </div>
     {% endif %}
@@ -144,12 +144,12 @@
       <h2 class="scanner-title">Scan barcode</h2>
       <div class="scan-controls">
         <button id="open-camera" class="scan-btn">
-          <img src="{{ url_for('static', filename='camera.gif') }}" alt="Open camera">
+          <img src="{{ url_for('static', filename='png/camera.gif') }}" alt="Open camera">
           Open Camera
         </button>
 
         <button id="upload-image" class="scan-btn">
-          <img src="{{ url_for('static', filename='photo.gif') }}" alt="Upload image">
+          <img src="{{ url_for('static', filename='png/photo.gif') }}" alt="Upload image">
           Upload Image
         </button>
 
@@ -177,7 +177,7 @@
     content: "";
     position: fixed;
     inset: 0;
-    background-image: url("{{ url_for('static', filename='logo2.png') }}"); /* tvoj logo */
+    background-image: url("{{ url_for('static', filename='png/logo2.png') }}"); /* tvoj logo */
     background-size: 900px auto;   /* veličina “pločice” sa logom */
     background-repeat:no-repeat;     /* šara po cijeloj stranici */
     background-position: center -10px;

@@ -81,6 +81,7 @@ Nutritional values may vary by region; always verify product packaging for medic
 ## 👤 Author
 
 **Jelena Nikčević**  
+BI Engineer
 Master’s student in Artificial Intelligence  
 Email: **nikcevicj7@gmail.com**
 

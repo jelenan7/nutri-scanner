@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Nutri Scanner - {% block title %}{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/style.css') }}">
 
 
 </head>
@@ -13,7 +13,7 @@
 <header>
     <div class="header-inner">
         <div class="brand">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Nutri Scanner logo">
+            <img src="{{ url_for('static', filename='png/logo.png') }}" alt="Nutri Scanner logo">
             <div class="brand-title">
                 <span class="brand-top">NUTRI</span>
                 <span class="brand-bottom">Scanner</span>
@@ -22,16 +22,16 @@
 
         <nav>
             <a href="{{ url_for('home') }}" class="nav-link {% if active_page == 'home' %}active{% endif %}">
-                <img src="{{ url_for('static', filename='home.png') }}" alt="Home">
+                <img src="{{ url_for('static', filename='png/home.png') }}" alt="Home">
             </a>
             <a href="{{ url_for('barcode_scan') }}" class="nav-link {% if active_page == 'barcode' %}active{% endif %}">
-                <img src="{{ url_for('static', filename='barcode.png') }}" alt="Barcode Scan">
+                <img src="{{ url_for('static', filename='png/barcode.png') }}" alt="Barcode Scan">
             </a>
             <a href="{{ url_for('smart_search') }}" class="nav-link {% if active_page == 'smart' %}active{% endif %}">
-                <img src="{{ url_for('static', filename='search.png') }}" alt="Search">
+                <img src="{{ url_for('static', filename='png/search.png') }}" alt="Search">
             </a>
             <a href="{{ url_for('about') }}" class="nav-link {% if active_page == 'about' %}active{% endif %}">
-                <img src="{{ url_for('static', filename='info.png') }}" alt="About">
+                <img src="{{ url_for('static', filename='png/info.png') }}" alt="About">
             </a>
         </nav>
         

@@ -56,15 +56,7 @@ requirements.txt
 ---
 
 ## 🌐 Deployment
-
-The project can be deployed easily on **Render** or **Railway**.
-
-### Render Deployment
-1. Create a new **Web Service**
-2. Connect your GitHub repo  
-3. Set:
-
-Your app will be available at a public URL automatically.
+www.nutriscanner.me
 
 ---
 

@@ -362,7 +362,7 @@ footer {
 /* GIF PRIJE PALJENJA KAMERE */
 #reader.show-gif::before {
     content: "";
-    background-image: url("/static/scan.gif");
+    background-image: url("gif/scan.gif");
     background-size: 115px;
     background-repeat: no-repeat;
     background-position: center 45px;

@@ -191,7 +191,7 @@ main {
 
 .btn-primary {
     display: inline-block;
-    padding: 8px 22px;
+    padding: 8px 18px;
     margin-top: 5px;
     margin-bottom: 15px;
     height: 43px;
@@ -485,7 +485,7 @@ div[id^="reader__dashboard_section_file"] {
 .flow-box {
     background: #ffffff;
     width: 222px;
-    min-height: 130px;
+    min-height: 150px;
     padding: 20px 20px;
     border-radius: 12px;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);

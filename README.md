@@ -23,22 +23,23 @@ It supports real-time camera scanning, nutritional filtering, and clean responsi
 
 ## 📁 Project Structure
 
-nutri-skener/
-│
-├── app.py # Main Flask application (routing & logic)
-├── off_client.py # OpenFoodFacts API client
-│
-├── static/ # CSS, GIFs, barcode animations, logo
-│ └── style.css
-│
-├── templates/ 
-│ ├── base.html
-│ ├── home.html
-│ ├── barcode_scan.html
-│ ├── smart_search.html
-│ └── about.html
-│
-└── README.md
+nutri-scanner/
+├── app.py
+├── off_client.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── static/
+│   ├── style.css
+│   ├── gif/
+│   └── png/
+└── templates/
+    ├── base.html
+    ├── home.html
+    ├── about.html
+    ├── barcode_scan.html
+    ├── smart_search.html
+    └── pagination.j2
 
 
 ---

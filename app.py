@@ -19,14 +19,17 @@ def barcode_scan():
     not_found = False
 
     if request.method == "POST":
-        barcode = request.form.get("barcode")
+        barcode = request.form.get("barcode", "").strip()
+
         if barcode:
             try:
                 response = get_product_by_barcode(barcode)
-                product = response.get("product")
 
-                if not product:
+                if response.get("status") == 1:
+                    product = response.get("product")
+                else:
                     not_found = True
+
             except Exception as e:
                 print("Greška pri dohvaćanju proizvoda:", e)
                 not_found = True
@@ -72,9 +75,28 @@ def smart_search():
         except ValueError:
             return None
 
+    def ok_max(nutriments, key, max_val):
+        if max_val is None:
+            return True
+
+        value = nutriments.get(key)
+        if value is None:
+            return False
+
+        try:
+            return float(value) <= max_val
+        except (TypeError, ValueError):
+            return False
+
     if request.method == "POST":
         action = request.form.get("action", "search")
-        page = int(request.form.get("page", 1))
+
+        try:
+            page = int(request.form.get("page", 1))
+            if page < 1:
+                page = 1
+        except ValueError:
+            page = 1
 
         # filters
         filters["product"] = request.form.get("product", "").strip()
@@ -90,52 +112,59 @@ def smart_search():
         filters["gluten_free"] = bool(request.form.get("gluten_free"))
 
         query = filters["product"] or "food"
-        raw = search_products(query, page_size=20, page=1)
+
+        try:
+            raw = search_products(query, page_size=50, page=1)
+        except Exception as e:
+            print("Greška pri pretrazi proizvoda:", e)
+            raw = []
 
         filtered = []
+
         for p in raw:
             nutr = p.get("nutriments", {}) or {}
+            labels_tags = p.get("labels_tags", []) or []
+            countries_tags = p.get("countries_tags", []) or []
 
-            def ok_max(key, max_val):
-                if max_val is None:
-                    return True
-                v = nutr.get(key)
-                if v is None:
-                    return False
-                try:
-                    return float(v) <= max_val
-                except (TypeError, ValueError):
-                    return False
+            if not ok_max(nutr, "sugars_100g", filters["sugar"]):
+                continue
+            if not ok_max(nutr, "fat_100g", filters["fat"]):
+                continue
+            if not ok_max(nutr, "energy-kcal_100g", filters["energy"]):
+                continue
+            if not ok_max(nutr, "carbohydrates_100g", filters["carbs"]):
+                continue
+            if not ok_max(nutr, "proteins_100g", filters["protein"]):
+                continue
 
-            if not ok_max("sugars_100g", filters["sugar"]): continue
-            if not ok_max("fat_100g", filters["fat"]): continue
-            if not ok_max("energy-kcal_100g", filters["energy"]): continue
-            if not ok_max("carbohydrates_100g", filters["carbs"]): continue
-            if not ok_max("proteins_100g", filters["protein"]): continue
-
-            if filters["available_mne"] and "en:montenegro" not in p.get("countries_tags", []): continue
-            if filters["vegan"] and "en:vegan" not in p.get("labels_tags", []): continue
-            if filters["lactose_free"] and "en:lactose-free" not in p.get("labels_tags", []): continue
-            if filters["gluten_free"] and "en:gluten-free" not in p.get("labels_tags", []): continue
+            if filters["available_mne"] and "en:montenegro" not in countries_tags:
+                continue
+            if filters["vegan"] and "en:vegan" not in labels_tags:
+                continue
+            if filters["lactose_free"] and "en:lactose-free" not in labels_tags:
+                continue
+            if filters["gluten_free"] and "en:gluten-free" not in labels_tags:
+                continue
 
             filtered.append(p)
 
-        # 🔹 3️⃣ TOTAL PAGES
         total_pages = max(1, math.ceil(len(filtered) / PER_PAGE))
 
-        # 🔹 4️⃣ REŽI SAMO TRENUTNU STRANICU
+        if page > total_pages:
+            page = total_pages
+
         start = (page - 1) * PER_PAGE
         end = start + PER_PAGE
         products = filtered[start:end]
 
-        # details
         if action.startswith("details:"):
             code = action.split(":", 1)[1]
             try:
                 resp = get_product_by_barcode(code)
-                selected_product = resp.get("product")
+                if resp.get("status") == 1:
+                    selected_product = resp.get("product")
             except Exception as e:
-                print(e)
+                print("Greška pri dohvaćanju detalja proizvoda:", e)
 
     return render_template(
         "smart_search.html",
@@ -147,11 +176,10 @@ def smart_search():
         selected_product=selected_product,
     )
 
+
 @app.route("/about")
 def about():
     return render_template("about.html", active_page="about")
-
-
 
 
 # ===== HEALTH CHECK =====
@@ -160,8 +188,6 @@ def ping():
     return "Aplikacija radi! ✅"
 
 
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-

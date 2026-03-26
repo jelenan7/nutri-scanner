@@ -10,7 +10,6 @@ HEADERS = {
 
 
 def get_product_by_barcode(barcode: str) -> dict:
-
     url = f"{API_BASE}/api/v2/product/{barcode}"
     params = {
         "fields": ",".join([
@@ -21,6 +20,7 @@ def get_product_by_barcode(barcode: str) -> dict:
             "quantity",
             "image_url",
             "image_front_url",
+            "image_front_small_url",
             "nutriments",
             "labels_tags",
             "countries_tags",
@@ -41,7 +41,17 @@ def get_product_by_barcode(barcode: str) -> dict:
             timeout=10
         )
         res.raise_for_status()
-        return res.json()
+        data = res.json()
+
+        product = data.get("product")
+        if product:
+            product["display_image"] = (
+                product.get("image_front_url")
+                or product.get("image_url")
+                or product.get("image_front_small_url")
+            )
+
+        return data
 
     except (ReadTimeout, RequestException) as e:
         print("⚠️ OFF product fetch error:", e)
@@ -70,15 +80,23 @@ def search_products(query: str, page_size: int = 25, page: int = 1) -> list:
         )
         res.raise_for_status()
         data = res.json()
-        return data.get("products", [])
+        products = data.get("products", [])
+
+        for product in products:
+            product["display_image"] = (
+                product.get("image_front_url")
+                or product.get("image_url")
+                or product.get("image_front_small_url")
+            )
+
+        return products
 
     except (ReadTimeout, RequestException) as e:
         print("⚠️ OFF search error:", e)
         return []
 
 
-def build_meal_plan(limit_kcal: int = 1200, vegan: bool = False, max_sugar: float | None = None) -> list[dict]:
-
+def build_meal_plan(limit_kcal: int = 1200, vegan: bool = False, max_sugar: float = None) -> list[dict]:
     params = {
         "search_terms": "meal",
         "search_simple": 1,
@@ -107,10 +125,10 @@ def build_meal_plan(limit_kcal: int = 1200, vegan: bool = False, max_sugar: floa
 
     for p in products:
         nutr = p.get("nutriments", {}) or {}
+        labels = p.get("labels_tags", []) or []
 
         kcal = nutr.get("energy-kcal_100g")
         sugar = nutr.get("sugars_100g")
-        labels = p.get("labels_tags", []) or []
 
         try:
             kcal = float(kcal)
@@ -130,6 +148,11 @@ def build_meal_plan(limit_kcal: int = 1200, vegan: bool = False, max_sugar: floa
             continue
 
         if total_kcal + kcal <= limit_kcal:
+            p["display_image"] = (
+                p.get("image_front_url")
+                or p.get("image_url")
+                or p.get("image_front_small_url")
+            )
             filtered.append(p)
             total_kcal += kcal
 

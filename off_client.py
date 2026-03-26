@@ -9,6 +9,26 @@ HEADERS = {
 }
 
 
+def extract_display_image(product: dict) -> str | None:
+    if not product:
+        return None
+
+    selected_images = product.get("selected_images", {}) or {}
+    front = selected_images.get("front", {}) or {}
+    display = front.get("display", {}) or {}
+
+    if display.get("en"):
+        return display.get("en")
+    if display.get("fr"):
+        return display.get("fr")
+
+    return (
+        product.get("image_front_url")
+        or product.get("image_url")
+        or product.get("image_front_small_url")
+    )
+
+
 def get_product_by_barcode(barcode: str) -> dict:
     url = f"{API_BASE}/api/v2/product/{barcode}"
     params = {
@@ -18,9 +38,6 @@ def get_product_by_barcode(barcode: str) -> dict:
             "generic_name",
             "brands",
             "quantity",
-            "image_url",
-            "image_front_url",
-            "image_front_small_url",
             "nutriments",
             "labels_tags",
             "countries_tags",
@@ -30,6 +47,10 @@ def get_product_by_barcode(barcode: str) -> dict:
             "ingredients_text",
             "allergens",
             "allergens_tags",
+            "selected_images",
+            "image_front_url",
+            "image_url",
+            "image_front_small_url"
         ])
     }
 
@@ -45,11 +66,7 @@ def get_product_by_barcode(barcode: str) -> dict:
 
         product = data.get("product")
         if product:
-            product["display_image"] = (
-                product.get("image_front_url")
-                or product.get("image_url")
-                or product.get("image_front_small_url")
-            )
+            product["display_image"] = extract_display_image(product)
 
         return data
 
@@ -83,11 +100,7 @@ def search_products(query: str, page_size: int = 25, page: int = 1) -> list:
         products = data.get("products", [])
 
         for product in products:
-            product["display_image"] = (
-                product.get("image_front_url")
-                or product.get("image_url")
-                or product.get("image_front_small_url")
-            )
+            product["display_image"] = extract_display_image(product)
 
         return products
 
@@ -148,11 +161,7 @@ def build_meal_plan(limit_kcal: int = 1200, vegan: bool = False, max_sugar: floa
             continue
 
         if total_kcal + kcal <= limit_kcal:
-            p["display_image"] = (
-                p.get("image_front_url")
-                or p.get("image_url")
-                or p.get("image_front_small_url")
-            )
+            p["display_image"] = extract_display_image(p)
             filtered.append(p)
             total_kcal += kcal
 
